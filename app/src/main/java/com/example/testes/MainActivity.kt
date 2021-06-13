@@ -1,14 +1,16 @@
 package com.example.testes
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var arrayList: ArrayList<data>
-    lateinit var imageId :Array<Int>
+    lateinit var imageId: Array<Int>
     lateinit var titulo: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,16 +42,29 @@ class MainActivity : AppCompatActivity() {
             "Vegeta"
 
         )
-        recyclerView=findViewById(R.id.recycler_view)
-        arrayList= arrayListOf()
+        recyclerView = findViewById(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setHasFixedSize(true)
+        arrayList = arrayListOf()
         getUserdata()
     }
 
     private fun getUserdata() {
-        for (i in imageId.indices){
+        for (i in imageId.indices) {
             val fulList = data(imageId[i], titulo[i])
             arrayList.add(fulList)
         }
-        recyclerView.adapter=MyAdapter(arrayList)
+
+        val adapter = MyAdapter(arrayList)
+
+        recyclerView.adapter = adapter
+        adapter.setOnItemClickListener(object : MyAdapter.onItemClickListener {
+            override fun onItemClick(position: Int) {
+                Toast.makeText(this@MainActivity,
+                    "testando${position}",
+                    Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 }
